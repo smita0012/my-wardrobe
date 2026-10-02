@@ -3,18 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>My Wardrobe</title>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap" rel="stylesheet">
-<style>
-:root{--bg:#FAF8FC;--ink:#1E1B2E;--mute:#6E6A80;--plum:#4A1D5C;--gold:#F2A900;--card:#fff;--line:#E4DFEC}
-@media(prefers-color-scheme:dark){:root{--bg:#17141F;--ink:<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Wardrobe</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Jost:wght@400;500&display=swap" rel="stylesheet">
 <style>
+[hidden]{display:none!important}
 :root{--bg:#FCF6F8;--ink:#2B1F2A;--mute:#7D6B78;--plum:#9C2C5E;--plum2:#7A1F48;--gold:#C9956B;--card:#fff;--line:#EBDDE3;--soft:#F6E9EF;--shadow:0 1px 2px #2b1f2a0d,0 8px 24px #9c2c5e14}
 @media(prefers-color-scheme:dark){:root{--bg:#1A1318;--ink:#F6ECF1;--mute:#B7A3AF;--plum:#E27BA6;--plum2:#C9608F;--gold:#D9A982;--card:#251C23;--line:#3A2C36;--soft:#2F2229;--shadow:0 8px 24px #0006}}
 *{box-sizing:border-box}
@@ -75,7 +67,7 @@ input[type=file]{font-size:.85rem;color:var(--ink)}
 .note{font-size:.85rem;color:var(--mute);margin:0 0 12px}
 .dot{position:fixed;z-index:20;width:8px;height:8px;border-radius:50%;pointer-events:none;animation:burst .8s ease-out forwards}
 @keyframes burst{to{transform:translate(var(--dx),var(--dy)) scale(.3);opacity:0}}
-.toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 20px;border-radius:999px;font-size:.9rem;z-index:30;animation:toast 2s ease forwards}
+.toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 20px;border-radius:999px;font-size:.9rem;z-index:30;animation:toast 3.5s ease forwards}
 @keyframes toast{0%{opacity:0;transform:translate(-50%,12px)}12%,80%{opacity:1;transform:translate(-50%,0)}100%{opacity:0;transform:translate(-50%,-6px)}}
 
 .hero{position:relative;text-align:center;padding:48px 8px 36px;overflow:hidden;border-radius:28px;margin-bottom:18px}
@@ -155,7 +147,7 @@ h1.mega{font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-we
     <li><b>Style and save.</b> Build outfits or ask for today's look and save the ones you love.</li>
   </ol>
   <div class="tipbox"><b>Photo tips</b><p>Lay the clothing flat in good light, with a plain background that contrasts with the colour. If some background is left behind, raise the removal strength slider while adding.</p></div>
-  <p class="note" style="text-align:center">Your wardrobe is saved privately on this device only.</p>
+  <p class="note" style="text-align:center">Your wardrobe is saved privately on this device only. App version 3.</p>
 </section>
 
 <section id="closet">
@@ -172,6 +164,7 @@ h1.mega{font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-we
       <input type="file" id="file" accept="image/*">
     </label>
     <canvas id="prev" hidden></canvas>
+    <div class="chk" id="rmWrap" hidden><label style="display:flex;gap:8px;align-items:center;color:var(--ink)"><input type="checkbox" id="rmbg" checked> Remove background</label></div>
     <label id="tolWrap" hidden>Background removal strength
       <input type="range" id="tol" min="10" max="90" value="40">
     </label>
@@ -224,8 +217,10 @@ const ROLE={Top:'up',Kurti:'up',Jeans:'low',Trousers:'low',Skirt:'low',Leggings:
 const OCCS=['College','Party','Office','Wedding'];
 const COLORS={Black:[20,20,20],White:[240,240,240],Grey:[128,128,128],Red:[200,30,40],Maroon:[110,20,40],Pink:[240,130,170],Orange:[240,130,30],Yellow:[240,205,50],Green:[50,150,70],Olive:[110,115,50],Teal:[30,130,130],Blue:[40,90,200],Navy:[25,35,100],Purple:[120,60,160],Brown:[110,70,40],Beige:[220,200,165],Cream:[245,235,210]};
 const $=s=>document.querySelector(s);
+function notify(m){const t=document.createElement('div');t.className='toast';t.style.maxWidth='90vw';t.style.textAlign='center';t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),3500)}
+window.addEventListener('error',e=>notify('Error: '+e.message));
 const load=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}};
-const save=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){alert('Storage is full. Delete some items and try again.')}};
+const save=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){notify('Could not save. Storage may be full or blocked in this browser. Delete some items or turn off private browsing, then try again.');return false}};
 let items=load('wd_items',[]),outfits=load('wd_outfits',[]),editId=null,orig=null,temp=null,rain=false;
 
 const fill=(sel,arr,first)=>{sel.innerHTML=(first?`<option value="">${first}</option>`:'')+arr.map(a=>`<option>${a}</option>`).join('')};
@@ -255,8 +250,8 @@ function editItem(id){const i=items.find(x=>x.id===id);editId=id;show('add');
   $('#addTitle').textContent='Edit item';$('#cancelEdit').hidden=false;
   const p=$('#prev'),im=new Image();im.onload=()=>{p.width=im.width;p.height=im.height;p.getContext('2d').drawImage(im,0,0);p.hidden=false};im.src=i.img;
   $('#cat').value=i.cat;$('#color').value=i.color;$('#pattern').value=i.pattern;$('#season').value=i.season;
-  document.querySelectorAll('#occ input').forEach(c=>c.checked=i.occ.includes(c.value));orig=null;$('#tolWrap').hidden=true;$('#aiNote').hidden=true}
-function resetForm(){editId=null;orig=null;$('#addTitle').textContent='Add clothes';$('#cancelEdit').hidden=true;$('#prev').hidden=true;$('#tolWrap').hidden=true;$('#aiNote').hidden=true;$('#file').value='';
+  document.querySelectorAll('#occ input').forEach(c=>c.checked=i.occ.includes(c.value));orig=null;$('#tolWrap').hidden=true;$('#rmWrap').hidden=true;$('#aiNote').hidden=true}
+function resetForm(){editId=null;orig=null;$('#addTitle').textContent='Add clothes';$('#cancelEdit').hidden=true;$('#prev').hidden=true;$('#tolWrap').hidden=true;$('#rmWrap').hidden=true;$('#aiNote').hidden=true;$('#file').value='';
   document.querySelectorAll('#occ input').forEach(c=>c.checked=false)}
 $('#cancelEdit').onclick=()=>{resetForm();show('closet')};
 
@@ -264,10 +259,17 @@ $('#cancelEdit').onclick=()=>{resetForm();show('closet')};
 $('#file').onchange=e=>{const f=e.target.files[0];if(!f)return;const im=new Image();
   im.onload=()=>{const s=Math.min(1,400/Math.max(im.width,im.height));const c=document.createElement('canvas');
     c.width=Math.round(im.width*s);c.height=Math.round(im.height*s);c.getContext('2d').drawImage(im,0,0,c.width,c.height);
-    orig=c;$('#tolWrap').hidden=false;process()};im.src=URL.createObjectURL(f)};
+    orig=c;$('#tolWrap').hidden=false;$('#rmWrap').hidden=false;process()};
+  im.onerror=()=>notify('This photo format could not be opened. Please use a JPG or PNG image.');im.src=URL.createObjectURL(f)};
+$('#rmbg').onchange=()=>orig&&process();
 $('#tol').oninput=()=>orig&&process();
+function useOriginal(msg){const p=$('#prev');p.width=orig.width;p.height=orig.height;const c=p.getContext('2d');c.clearRect(0,0,p.width,p.height);c.drawImage(orig,0,0);p.hidden=false;autoTag(p);
+  $('#aiNote').hidden=false;$('#aiNote').textContent=msg+' You can still save this piece and edit the tags.'}
+function process(){try{if(!$('#rmbg').checked){useOriginal('Background removal is off.');return}
+  if(!removeBg())useOriginal('The background could not be removed from this photo, so the original is used. Try a plain, contrasting background.')}
+  catch(err){console.error(err);useOriginal('Something went wrong removing the background.')}}
 
-function process(){
+function removeBg(){
   const w=orig.width,h=orig.height,ctx=orig.getContext('2d'),d=ctx.getImageData(0,0,w,h),px=d.data,tol=+$('#tol').value;
   // background color = average of the border pixels
   let r=0,g=0,b=0,n=0;const edge=(x,y)=>{const k=(y*w+x)*4;r+=px[k];g+=px[k+1];b+=px[k+2];n++};
@@ -282,10 +284,10 @@ function process(){
   // crop to the clothing
   let x0=w,y0=h,x1=0,y1=0;
   for(let y=0;y<h;y++)for(let x=0;x<w;x++)if(px[(y*w+x)*4+3]){if(x<x0)x0=x;if(x>x1)x1=x;if(y<y0)y0=y;if(y>y1)y1=y}
-  if(x1<=x0||y1<=y0){alert('The whole photo was removed. Lower the removal strength.');return}
+  if(x1<=x0||y1<=y0||(x1-x0)*(y1-y0)<w*h*.04)return false;
   const t=document.createElement('canvas');t.width=w;t.height=h;t.getContext('2d').putImageData(d,0,0);
   const p=$('#prev');p.width=x1-x0+1;p.height=y1-y0+1;const pc=p.getContext('2d');pc.clearRect(0,0,p.width,p.height);
-  pc.drawImage(t,x0,y0,p.width,p.height,0,0,p.width,p.height);p.hidden=false;autoTag(p)}
+  pc.drawImage(t,x0,y0,p.width,p.height,0,0,p.width,p.height);p.hidden=false;autoTag(p);return true}
 
 function autoTag(c){
   const w=c.width,h=c.height,px=c.getContext('2d').getImageData(0,0,w,h).data,bk={};let hx=0,vy=0,cnt=0;
@@ -303,11 +305,11 @@ function autoTag(c){
   $('#aiNote').hidden=false;$('#aiNote').textContent=`Guessed: ${best}, ${pat.toLowerCase()}, ${cat.toLowerCase()}. The category is a rough guess from the shape, so please check the tags.`}
 
 $('#saveItem').onclick=e=>{
-  const p=$('#prev');if(p.hidden){alert('Choose a photo first.');return}
+  const p=$('#prev');if(p.hidden){notify('Choose a photo first.');return}
   const o=[...document.querySelectorAll('#occ input:checked')].map(c=>c.value);
   const rec={id:editId||Date.now()+'',img:p.toDataURL('image/webp',.85),cat:$('#cat').value,color:$('#color').value,pattern:$('#pattern').value,season:$('#season').value,occ:o};
   if(editId){const i=items.findIndex(x=>x.id===editId);items[i]=rec}else items.push(rec);
-  save('wd_items',items);burst(e,editId?'Changes saved':'Added to your closet');resetForm();show('closet')};
+  if(!save('wd_items',items)){if(!editId)items.pop();return}burst(e,editId?'Changes saved':'Added to your closet');resetForm();show('closet')};
 
 /* ---------- Outfit builder ---------- */
 let board=[];
@@ -324,7 +326,7 @@ function drawBoard(){const st=$('#stage');st.innerHTML='';
     im.onpointerup=()=>{drag=false;im.style.cursor='grab'};
     im.ondblclick=()=>{board.splice(idx,1);drawBoard()};st.appendChild(im)})}
 $('#clearStage').onclick=()=>{board=[];drawBoard()};
-$('#saveOutfit').onclick=e=>{if(!board.length){alert('Add at least one item to the board.');return}
+$('#saveOutfit').onclick=e=>{if(!board.length){notify('Add at least one item to the board.');return}
   outfits.push({id:Date.now()+'',name:$('#oName').value||'Outfit '+(outfits.length+1),pieces:board.map(b=>({...b}))});
   save('wd_outfits',outfits);burst(e,'Outfit saved');$('#oName').value='';board=[];renderBuild()};
 function miniHTML(pieces){return `<div class="mini"><div class="in">${pieces.map(p=>{const it=items.find(i=>i.id===p.id);return it?`<img src="${it.img}" style="left:${p.x}px;top:${p.y}px" alt="">`:''}).join('')}</div></div>`}
@@ -334,7 +336,7 @@ function loadOutfit(id){board=outfits.find(o=>o.id===id).pieces.map(p=>({...p}))
 function delOutfit(id){if(confirm('Delete this outfit?')){outfits=outfits.filter(o=>o.id!==id);save('wd_outfits',outfits);renderOutfits()}}
 
 /* ---------- Daily suggestion ---------- */
-$('#getWx').onclick=()=>{if(!navigator.geolocation){alert('Location is not available. Type the temperature instead.');return}
+$('#getWx').onclick=()=>{if(!navigator.geolocation){notify('Location is not available. Type the temperature instead.');return}
   $('#wx').textContent='Getting weather...';
   navigator.geolocation.getCurrentPosition(async pos=>{try{
     const r=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${pos.coords.latitude}&longitude=${pos.coords.longitude}&current=temperature_2m,precipitation`);
@@ -346,7 +348,7 @@ function showWx(){$('#wx').textContent=temp==null?'Weather not loaded yet.':`${t
 const seasonFor=t=>t>=27?'Summer':t<=17?'Winter':'Mild';
 const pick=a=>a[Math.floor(Math.random()*a.length)];
 $('#suggest').onclick=e=>{
-  if(temp==null){alert('Load the weather or type a temperature first.');return}
+  if(temp==null){notify('Load the weather or type a temperature first.');return}
   const occ=$('#tOcc').value,sn=seasonFor(temp);
   const ok=i=>sn==='Mild'||i.season==='All'||i.season===sn;
   const pool=role=>{const all=items.filter(i=>ROLE[i.cat]===role&&ok(i));const m=all.filter(i=>i.occ.includes(occ));return m.length?m:all};
@@ -372,257 +374,6 @@ function burst(e,msg){const c=['#9C2C5E','#C9956B','#B79AE0','#E9A3C0'];const x=
     d.style.setProperty('--dx',(Math.random()-.5)*200+'px');d.style.setProperty('--dy',(Math.random()-.9)*180+'px');document.body.appendChild(d);setTimeout(()=>d.remove(),800)}
   const t=document.createElement('div');t.className='toast';t.textContent=msg||'Saved';document.body.appendChild(t);setTimeout(()=>t.remove(),2000)}
 renderHome();
-</script>
-</body>
-</html>#F1EEF7;--mute:#A29DB5;--plum:#C79BE0;--gold:#F2A900;--card:#221E2D;--line:#352F44}}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:'Bricolage Grotesque',system-ui,sans-serif;padding-bottom:84px}
-header{padding:20px 16px 4px;max-width:900px;margin:auto}
-h1{margin:0;font-size:2rem;font-weight:800;color:var(--plum);letter-spacing:-.02em}
-h2{font-size:1.2rem;margin:0 0 10px}
-main{max-width:900px;margin:auto;padding:12px 16px}
-nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:var(--card);border-top:1px solid var(--line);z-index:5}
-nav button{flex:1;padding:14px 4px;border:0;background:none;color:var(--mute);font:600 .9rem inherit;font-family:inherit;cursor:pointer}
-nav button.on{color:var(--plum);box-shadow:inset 0 3px 0 var(--gold)}
-section{display:none}section.on{display:block}
-button,select,input{font-family:inherit;font-size:.95rem}
-.btn{background:var(--plum);color:#fff;border:0;border-radius:8px;padding:10px 16px;font-weight:600;cursor:pointer}
-.btn.alt{background:none;color:var(--plum);border:1.5px solid var(--plum)}
-.btn:focus-visible,select:focus-visible,input:focus-visible,nav button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
-select,input[type=number]{padding:9px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink)}
-.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
-.item{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px}
-.item img{width:100%;height:150px;object-fit:contain;background:repeating-conic-gradient(#0000000a 0 25%,#0000 0 50%) 0 0/16px 16px;border-radius:6px}
-.tags{font-size:.8rem;color:var(--mute);margin:6px 0}
-.sw{display:inline-block;width:11px;height:11px;border-radius:50%;border:1px solid var(--line);vertical-align:-1px;margin-right:4px}
-.empty{color:var(--mute);padding:28px 0}
-.form{display:grid;gap:10px;max-width:420px}
-.form label{display:grid;gap:4px;font-weight:600;font-size:.9rem}
-.chk{display:flex;gap:10px;flex-wrap:wrap;font-weight:400}
-#prev{max-width:100%;max-height:300px;background:repeating-conic-gradient(#0000000a 0 25%,#0000 0 50%) 0 0/16px 16px;border-radius:8px}
-.stage{position:relative;width:300px;height:420px;border:2px dashed var(--line);border-radius:12px;background:var(--card);touch-action:none;overflow:hidden;margin:auto}
-.stage img{position:absolute;width:130px;cursor:grab;user-select:none;-webkit-user-drag:none}
-.tray{display:flex;gap:8px;overflow-x:auto;padding:10px 0}
-.tray img{height:70px;width:70px;object-fit:contain;border:1px solid var(--line);border-radius:8px;background:var(--card);cursor:pointer}
-.mini{width:135px;height:189px;overflow:hidden;position:relative;border:1px solid var(--line);border-radius:8px;background:var(--card)}
-.mini .in{width:300px;height:420px;transform:scale(.45);transform-origin:0 0;position:relative}
-.mini img{position:absolute;width:130px}
-.wx{background:var(--plum);color:#fff;border-radius:12px;padding:14px;margin-bottom:12px}
-.note{font-size:.82rem;color:var(--mute)}
-</style>
-</head>
-<body>
-<header><h1>My Wardrobe</h1></header>
-<main>
-
-<section id="closet" class="on">
-  <div class="row">
-    <select id="fCat"></select><select id="fColor"></select><select id="fSeason"></select><select id="fOcc"></select>
-  </div>
-  <div id="grid" class="grid"></div>
-</section>
-
-<section id="add">
-  <h2 id="addTitle">Add clothes</h2>
-  <div class="form">
-    <label>Take a photo or choose from gallery
-      <input type="file" id="file" accept="image/*">
-    </label>
-    <canvas id="prev" hidden></canvas>
-    <label id="tolWrap" hidden>Background removal strength
-      <input type="range" id="tol" min="10" max="90" value="40">
-    </label>
-    <p class="note" id="aiNote" hidden></p>
-    <label>Category <select id="cat"></select></label>
-    <label>Color <select id="color"></select></label>
-    <label>Pattern <select id="pattern"><option>Solid</option><option>Striped</option><option>Printed</option></select></label>
-    <label>Season <select id="season"><option>All</option><option>Summer</option><option>Winter</option></select></label>
-    <div><b style="font-size:.9rem">Occasion</b><div class="chk" id="occ"></div></div>
-    <div class="row"><button class="btn" id="saveItem">Save to closet</button><button class="btn alt" id="cancelEdit" hidden>Cancel</button></div>
-  </div>
-</section>
-
-<section id="build">
-  <h2>Outfit builder</h2>
-  <p class="note">Tap an item below to add it, then drag it into place. Double-tap an item on the board to remove it.</p>
-  <div class="stage" id="stage"></div>
-  <div class="tray" id="tray"></div>
-  <div class="row"><input id="oName" placeholder="Outfit name" style="padding:9px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink)"><button class="btn" id="saveOutfit">Save outfit</button><button class="btn alt" id="clearStage">Clear</button></div>
-  <h2>Saved outfits</h2>
-  <div id="outfits" class="grid"></div>
-</section>
-
-<section id="today">
-  <h2>Today's suggestion</h2>
-  <div class="wx" id="wx">Weather not loaded yet.</div>
-  <div class="row">
-    <button class="btn alt" id="getWx">Use my location's weather</button>
-    <label>or temp °C <input type="number" id="tempIn" style="width:80px"></label>
-  </div>
-  <div class="row">
-    <select id="tOcc"></select>
-    <button class="btn" id="suggest">Suggest an outfit</button>
-  </div>
-  <div id="sug"></div>
-</section>
-</main>
-
-<nav>
-  <button data-t="closet" class="on">Closet</button>
-  <button data-t="add">Add</button>
-  <button data-t="build">Outfits</button>
-  <button data-t="today">Today</button>
-</nav>
-
-<script>
-const CATS=['Top','Kurti','Jeans','Trousers','Skirt','Leggings','Saree','Dress','Lehenga','Jacket','Shoes','Dupatta'];
-const ROLE={Top:'up',Kurti:'up',Jeans:'low',Trousers:'low',Skirt:'low',Leggings:'low',Saree:'full',Dress:'full',Lehenga:'full',Jacket:'out',Shoes:'shoe',Dupatta:'acc'};
-const OCCS=['College','Party','Office','Wedding'];
-const COLORS={Black:[20,20,20],White:[240,240,240],Grey:[128,128,128],Red:[200,30,40],Maroon:[110,20,40],Pink:[240,130,170],Orange:[240,130,30],Yellow:[240,205,50],Green:[50,150,70],Olive:[110,115,50],Teal:[30,130,130],Blue:[40,90,200],Navy:[25,35,100],Purple:[120,60,160],Brown:[110,70,40],Beige:[220,200,165],Cream:[245,235,210]};
-const $=s=>document.querySelector(s);
-const load=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}};
-const save=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){alert('Storage is full. Delete some items and try again.')}};
-let items=load('wd_items',[]),outfits=load('wd_outfits',[]),editId=null,orig=null,temp=null,rain=false;
-
-const fill=(sel,arr,first)=>{sel.innerHTML=(first?`<option value="">${first}</option>`:'')+arr.map(a=>`<option>${a}</option>`).join('')};
-fill($('#cat'),CATS);fill($('#color'),Object.keys(COLORS));fill($('#fCat'),CATS,'All categories');fill($('#fColor'),Object.keys(COLORS),'All colors');
-fill($('#fSeason'),['Summer','Winter','All'],'All seasons');fill($('#fOcc'),OCCS,'All occasions');fill($('#tOcc'),OCCS);
-$('#occ').innerHTML=OCCS.map(o=>`<label class="chk"><input type="checkbox" value="${o}"> ${o}</label>`).join('');
-
-document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>show(b.dataset.t));
-function show(t){document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));
-  document.querySelectorAll('section').forEach(s=>s.classList.toggle('on',s.id===t));
-  if(t==='closet')renderCloset();if(t==='build')renderBuild();if(t==='add'&&!editId)resetForm();window.scrollTo(0,0)}
-
-/* ---------- Closet ---------- */
-['#fCat','#fColor','#fSeason','#fOcc'].forEach(s=>$(s).onchange=renderCloset);
-function renderCloset(){
-  const c=$('#fCat').value,co=$('#fColor').value,se=$('#fSeason').value,oc=$('#fOcc').value;
-  const list=items.filter(i=>(!c||i.cat===c)&&(!co||i.color===co)&&(!se||i.season===se)&&(!oc||i.occ.includes(oc)));
-  $('#grid').innerHTML=list.length?list.map(i=>`<div class="item"><img src="${i.img}" alt="${i.cat}">
-    <div class="tags"><span class="sw" style="background:rgb(${COLORS[i.color]})"></span>${i.color} ${i.cat}<br>${i.pattern}, ${i.season}${i.occ.length?'<br>'+i.occ.join(', '):''}</div>
-    <div class="row" style="margin:0"><button class="btn alt" onclick="editItem('${i.id}')">Edit</button><button class="btn alt" onclick="delItem('${i.id}')">Delete</button></div></div>`).join('')
-    :`<div class="empty">${items.length?'No items match these filters.':'Your closet is empty. Open Add and upload your first piece.'}</div>`;
-}
-function delItem(id){if(confirm('Delete this item?')){items=items.filter(i=>i.id!==id);save('wd_items',items);renderCloset()}}
-function editItem(id){const i=items.find(x=>x.id===id);editId=id;show('add');
-  $('#addTitle').textContent='Edit item';$('#cancelEdit').hidden=false;
-  const p=$('#prev'),im=new Image();im.onload=()=>{p.width=im.width;p.height=im.height;p.getContext('2d').drawImage(im,0,0);p.hidden=false};im.src=i.img;
-  $('#cat').value=i.cat;$('#color').value=i.color;$('#pattern').value=i.pattern;$('#season').value=i.season;
-  document.querySelectorAll('#occ input').forEach(c=>c.checked=i.occ.includes(c.value));orig=null;$('#tolWrap').hidden=true;$('#aiNote').hidden=true}
-function resetForm(){editId=null;orig=null;$('#addTitle').textContent='Add clothes';$('#cancelEdit').hidden=true;$('#prev').hidden=true;$('#tolWrap').hidden=true;$('#aiNote').hidden=true;$('#file').value='';
-  document.querySelectorAll('#occ input').forEach(c=>c.checked=false)}
-$('#cancelEdit').onclick=()=>{resetForm();show('closet')};
-
-/* ---------- Photo: background removal + auto tags ---------- */
-$('#file').onchange=e=>{const f=e.target.files[0];if(!f)return;const im=new Image();
-  im.onload=()=>{const s=Math.min(1,400/Math.max(im.width,im.height));const c=document.createElement('canvas');
-    c.width=Math.round(im.width*s);c.height=Math.round(im.height*s);c.getContext('2d').drawImage(im,0,0,c.width,c.height);
-    orig=c;$('#tolWrap').hidden=false;process()};im.src=URL.createObjectURL(f)};
-$('#tol').oninput=()=>orig&&process();
-
-function process(){
-  const w=orig.width,h=orig.height,ctx=orig.getContext('2d'),d=ctx.getImageData(0,0,w,h),px=d.data,tol=+$('#tol').value;
-  // background color = average of the border pixels
-  let r=0,g=0,b=0,n=0;const edge=(x,y)=>{const k=(y*w+x)*4;r+=px[k];g+=px[k+1];b+=px[k+2];n++};
-  for(let x=0;x<w;x++){edge(x,0);edge(x,h-1)}for(let y=0;y<h;y++){edge(0,y);edge(w-1,y)}
-  r/=n;g/=n;b/=n;
-  const near=k=>Math.hypot(px[k]-r,px[k+1]-g,px[k+2]-b)<tol*1.8;
-  const seen=new Uint8Array(w*h),st=[];
-  const push=(x,y)=>{const i=y*w+x;if(!seen[i]&&near(i*4)){seen[i]=1;st.push(i)}};
-  for(let x=0;x<w;x++){push(x,0);push(x,h-1)}for(let y=0;y<h;y++){push(0,y);push(w-1,y)}
-  while(st.length){const i=st.pop(),x=i%w,y=(i-x)/w;px[i*4+3]=0;
-    if(x>0)push(x-1,y);if(x<w-1)push(x+1,y);if(y>0)push(x,y-1);if(y<h-1)push(x,y+1)}
-  // crop to the clothing
-  let x0=w,y0=h,x1=0,y1=0;
-  for(let y=0;y<h;y++)for(let x=0;x<w;x++)if(px[(y*w+x)*4+3]){if(x<x0)x0=x;if(x>x1)x1=x;if(y<y0)y0=y;if(y>y1)y1=y}
-  if(x1<=x0||y1<=y0){alert('The whole photo was removed. Lower the removal strength.');return}
-  const t=document.createElement('canvas');t.width=w;t.height=h;t.getContext('2d').putImageData(d,0,0);
-  const p=$('#prev');p.width=x1-x0+1;p.height=y1-y0+1;const pc=p.getContext('2d');pc.clearRect(0,0,p.width,p.height);
-  pc.drawImage(t,x0,y0,p.width,p.height,0,0,p.width,p.height);p.hidden=false;autoTag(p)}
-
-function autoTag(c){
-  const w=c.width,h=c.height,px=c.getContext('2d').getImageData(0,0,w,h).data,bk={};let hx=0,vy=0,cnt=0;
-  for(let y=0;y<h-1;y++)for(let x=0;x<w-1;x++){const k=(y*w+x)*4;if(px[k+3]<200)continue;
-    const key=(px[k]>>5)+','+(px[k+1]>>5)+','+(px[k+2]>>5);bk[key]=(bk[key]||0)+1;
-    const kx=k+4,ky=k+w*4;if(px[kx+3]>200&&px[ky+3]>200){hx+=Math.abs(px[k]-px[kx])+Math.abs(px[k+1]-px[kx+1])+Math.abs(px[k+2]-px[kx+2]);
-      vy+=Math.abs(px[k]-px[ky])+Math.abs(px[k+1]-px[ky+1])+Math.abs(px[k+2]-px[ky+2]);cnt++}}
-  const top=Object.entries(bk).sort((a,b)=>b[1]-a[1])[0];if(!top)return;
-  const rgb=top[0].split(',').map(v=>v*32+16);let best='Black',bd=1e9;
-  for(const[nm,c2]of Object.entries(COLORS)){const dd=Math.hypot(rgb[0]-c2[0],rgb[1]-c2[1],rgb[2]-c2[2]);if(dd<bd){bd=dd;best=nm}}
-  hx/=cnt||1;vy/=cnt||1;const m=(hx+vy)/2;
-  const pat=m<9?'Solid':(Math.max(hx,vy)>1.8*Math.min(hx,vy)&&m<30?'Striped':'Printed');
-  const ar=h/w,cat=ar<.75?'Shoes':ar<1.15?'Top':ar<1.6?'Kurti':ar<2.3?'Jeans':'Saree';
-  $('#color').value=best;$('#pattern').value=pat;$('#cat').value=cat;
-  $('#aiNote').hidden=false;$('#aiNote').textContent=`Guessed: ${best}, ${pat.toLowerCase()}, ${cat.toLowerCase()}. The category is a rough guess from the shape, so please check the tags.`}
-
-$('#saveItem').onclick=()=>{
-  const p=$('#prev');if(p.hidden){alert('Choose a photo first.');return}
-  const o=[...document.querySelectorAll('#occ input:checked')].map(c=>c.value);
-  const rec={id:editId||Date.now()+'',img:p.toDataURL('image/webp',.85),cat:$('#cat').value,color:$('#color').value,pattern:$('#pattern').value,season:$('#season').value,occ:o};
-  if(editId){const i=items.findIndex(x=>x.id===editId);items[i]=rec}else items.push(rec);
-  save('wd_items',items);resetForm();show('closet')};
-
-/* ---------- Outfit builder ---------- */
-let board=[];
-function renderBuild(){
-  $('#tray').innerHTML=items.length?items.map(i=>`<img src="${i.img}" alt="${i.cat}" onclick="addToBoard('${i.id}')">`).join(''):'<span class="empty">Add clothes to your closet first.</span>';
-  drawBoard();renderOutfits()}
-function addToBoard(id,x,y){board.push({id,x:x??80+Math.random()*40,y:y??20+board.length*50});drawBoard()}
-function drawBoard(){const st=$('#stage');st.innerHTML='';
-  board.forEach((b,idx)=>{const it=items.find(i=>i.id===b.id);if(!it)return;const im=document.createElement('img');
-    im.src=it.img;im.style.left=b.x+'px';im.style.top=b.y+'px';im.alt=it.cat;
-    let sx,sy,ox,oy,drag=false;
-    im.onpointerdown=e=>{drag=true;sx=e.clientX;sy=e.clientY;ox=b.x;oy=b.y;im.setPointerCapture(e.pointerId);im.style.cursor='grabbing'};
-    im.onpointermove=e=>{if(!drag)return;b.x=ox+e.clientX-sx;b.y=oy+e.clientY-sy;im.style.left=b.x+'px';im.style.top=b.y+'px'};
-    im.onpointerup=()=>{drag=false;im.style.cursor='grab'};
-    im.ondblclick=()=>{board.splice(idx,1);drawBoard()};st.appendChild(im)})}
-$('#clearStage').onclick=()=>{board=[];drawBoard()};
-$('#saveOutfit').onclick=()=>{if(!board.length){alert('Add at least one item to the board.');return}
-  outfits.push({id:Date.now()+'',name:$('#oName').value||'Outfit '+(outfits.length+1),pieces:board.map(b=>({...b}))});
-  save('wd_outfits',outfits);$('#oName').value='';board=[];renderBuild()};
-function miniHTML(pieces){return `<div class="mini"><div class="in">${pieces.map(p=>{const it=items.find(i=>i.id===p.id);return it?`<img src="${it.img}" style="left:${p.x}px;top:${p.y}px" alt="">`:''}).join('')}</div></div>`}
-function renderOutfits(){$('#outfits').innerHTML=outfits.length?outfits.map(o=>`<div class="item">${miniHTML(o.pieces)}<div class="tags">${o.name}</div>
-  <div class="row" style="margin:0"><button class="btn alt" onclick="loadOutfit('${o.id}')">Edit</button><button class="btn alt" onclick="delOutfit('${o.id}')">Delete</button></div></div>`).join(''):'<div class="empty">No saved outfits yet.</div>'}
-function loadOutfit(id){board=outfits.find(o=>o.id===id).pieces.map(p=>({...p}));outfits=outfits.filter(o=>o.id!==id);save('wd_outfits',outfits);renderBuild();window.scrollTo(0,0)}
-function delOutfit(id){if(confirm('Delete this outfit?')){outfits=outfits.filter(o=>o.id!==id);save('wd_outfits',outfits);renderOutfits()}}
-
-/* ---------- Daily suggestion ---------- */
-$('#getWx').onclick=()=>{if(!navigator.geolocation){alert('Location is not available. Type the temperature instead.');return}
-  $('#wx').textContent='Getting weather...';
-  navigator.geolocation.getCurrentPosition(async pos=>{try{
-    const r=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${pos.coords.latitude}&longitude=${pos.coords.longitude}&current=temperature_2m,precipitation`);
-    const j=await r.json();temp=Math.round(j.current.temperature_2m);rain=j.current.precipitation>0;showWx()}
-    catch(e){$('#wx').textContent='Could not load weather. Type the temperature below.'}},
-    ()=>{$('#wx').textContent='Location was blocked. Type the temperature below.'})};
-$('#tempIn').oninput=e=>{temp=e.target.value===''?null:+e.target.value;showWx()};
-function showWx(){$('#wx').textContent=temp==null?'Weather not loaded yet.':`${temp}°C${rain?', raining':''}: ${seasonFor(temp)==='Summer'?'warm, wear light fabrics':seasonFor(temp)==='Winter'?'cold, layer up':'mild day'}`}
-const seasonFor=t=>t>=27?'Summer':t<=17?'Winter':'Mild';
-const pick=a=>a[Math.floor(Math.random()*a.length)];
-$('#suggest').onclick=()=>{
-  if(temp==null){alert('Load the weather or type a temperature first.');return}
-  const occ=$('#tOcc').value,sn=seasonFor(temp);
-  const ok=i=>sn==='Mild'||i.season==='All'||i.season===sn;
-  const pool=role=>{const all=items.filter(i=>ROLE[i.cat]===role&&ok(i));const m=all.filter(i=>i.occ.includes(occ));return m.length?m:all};
-  const dressy=occ==='Wedding'||occ==='Party';
-  const full=pool('full'),up=pool('up'),low=pool('low');
-  let set=[];
-  if(full.length&&(dressy||!up.length||!low.length)&&(dressy||Math.random()<.3||!up.length||!low.length))set.push(pick(full));
-  else if(up.length&&low.length)set.push(pick(up),pick(low));
-  else if(full.length)set.push(pick(full));
-  if(!set.length){$('#sug').innerHTML='<p class="empty">Not enough matching clothes. Add a top and bottom (or a dress or saree) for this weather and occasion.</p>';return}
-  if(temp<18||rain&&temp<24){const j=pool('out');if(j.length)set.push(pick(j))}
-  const sh=pool('shoe');if(sh.length)set.push(pick(sh));
-  const place={out:20,up:20,full:20,low:170,shoe:320,acc:20};let u=0;
-  const pieces=set.map(it=>{const r=ROLE[it.cat];let y=place[r];if(r==='out')return{id:it.id,x:150,y:30};return{id:it.id,x:85,y:y}});
-  window._sug=pieces;
-  $('#sug').innerHTML=`<div class="row">${set.map(i=>`<div class="item" style="width:130px"><img src="${i.img}" alt="${i.cat}"><div class="tags">${i.color} ${i.cat}</div></div>`).join('')}</div>
-   <div class="row"><button class="btn" id="again">Try another</button><button class="btn alt" id="saveSug">Save as outfit</button></div>`;
-  $('#again').onclick=()=>$('#suggest').click();
-  $('#saveSug').onclick=()=>{outfits.push({id:Date.now()+'',name:`${occ} look`,pieces:window._sug});save('wd_outfits',outfits);alert('Saved to Outfits.')}};
-
-renderCloset();
 </script>
 </body>
 </html>
