@@ -7,7 +7,374 @@
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#FAF8FC;--ink:#1E1B2E;--mute:#6E6A80;--plum:#4A1D5C;--gold:#F2A900;--card:#fff;--line:#E4DFEC}
-@media(prefers-color-scheme:dark){:root{--bg:#17141F;--ink:#F1EEF7;--mute:#A29DB5;--plum:#C79BE0;--gold:#F2A900;--card:#221E2D;--line:#352F44}}
+@media(prefers-color-scheme:dark){:root{--bg:#17141F;--ink:<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wardrobe</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Jost:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#FCF6F8;--ink:#2B1F2A;--mute:#7D6B78;--plum:#9C2C5E;--plum2:#7A1F48;--gold:#C9956B;--card:#fff;--line:#EBDDE3;--soft:#F6E9EF;--shadow:0 1px 2px #2b1f2a0d,0 8px 24px #9c2c5e14}
+@media(prefers-color-scheme:dark){:root{--bg:#1A1318;--ink:#F6ECF1;--mute:#B7A3AF;--plum:#E27BA6;--plum2:#C9608F;--gold:#D9A982;--card:#251C23;--line:#3A2C36;--soft:#2F2229;--shadow:0 8px 24px #0006}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Jost',system-ui,sans-serif;font-weight:400;padding-bottom:92px;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(ellipse at 10% -10%,#f3d3e1aa,transparent 50%),radial-gradient(ellipse at 100% 0%,#e8dcf5aa,transparent 45%)}
+@media(prefers-color-scheme:dark){body::before{background:radial-gradient(ellipse at 10% -10%,#4a203955,transparent 50%)}}
+header{padding:28px 20px 6px;max-width:900px;margin:auto}
+h1{margin:0;font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:2.7rem;letter-spacing:-.01em;line-height:1;color:var(--ink);animation:fadeUp .7s both}
+.tag{margin:6px 0 0;color:var(--mute);font-size:.95rem;letter-spacing:.02em;animation:fadeUp .7s .1s both}
+.tag::before{content:"";display:inline-block;width:28px;height:2px;background:var(--gold);vertical-align:middle;margin-right:10px;border-radius:2px}
+h2{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.6rem;margin:6px 0 12px;font-weight:600}
+main{max-width:900px;margin:auto;padding:14px 20px}
+nav{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:center;gap:4px;background:color-mix(in srgb,var(--card) 88%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--line);z-index:5;padding:8px 8px calc(8px + env(safe-area-inset-bottom,0px))}
+nav button{flex:1;max-width:130px;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 4px;border:0;background:none;color:var(--mute);font-family:inherit;font-weight:500;font-size:.78rem;cursor:pointer;border-radius:12px;transition:color .2s,background .2s}
+nav svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;transition:transform .25s}
+nav button:hover svg{transform:translateY(-2px)}
+nav button.on{color:var(--plum);background:var(--soft)}
+nav button.on svg{transform:scale(1.1)}
+section{display:none}section.on{display:block;animation:fadeUp .4s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+button,select,input{font-family:inherit;font-size:.95rem}
+.btn{background:var(--plum);color:#fff;border:0;border-radius:10px;padding:11px 20px;font-weight:500;letter-spacing:.02em;cursor:pointer;box-shadow:0 2px 8px #9c2c5e33;transition:transform .2s,box-shadow .2s,background .2s}
+.btn:hover{background:var(--plum2);transform:translateY(-1px);box-shadow:0 6px 16px #9c2c5e40}
+.btn:active{transform:scale(.97)}
+.btn.alt{background:transparent;color:var(--plum);border:1px solid var(--line);box-shadow:none}
+.btn.alt:hover{border-color:var(--plum);background:var(--soft)}
+.btn:focus-visible,select:focus-visible,input:focus-visible,nav button:focus-visible{outline:2px solid var(--plum);outline-offset:2px}
+select,input[type=number],#oName{padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);transition:border-color .2s}
+select:hover,#oName:focus{border-color:var(--plum)}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px}
+.item{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:10px;box-shadow:var(--shadow);animation:rise .5s cubic-bezier(.2,.8,.2,1) both;transition:transform .3s,box-shadow .3s}
+.item:hover{transform:translateY(-4px);box-shadow:0 14px 32px #9c2c5e22}
+.grid .item:nth-child(2){animation-delay:.05s}.grid .item:nth-child(3){animation-delay:.1s}.grid .item:nth-child(4){animation-delay:.15s}.grid .item:nth-child(n+5){animation-delay:.2s}
+@keyframes rise{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:none}}
+.item img{width:100%;height:160px;object-fit:contain;background:linear-gradient(160deg,var(--soft),var(--card));border-radius:12px;transition:transform .4s}
+.item:hover img{transform:scale(1.05)}
+.item .row .btn{padding:6px 12px;font-size:.82rem;border-radius:8px}
+.tags{font-size:.85rem;color:var(--mute);margin:8px 2px;line-height:1.45}
+.sw{display:inline-block;width:12px;height:12px;border-radius:50%;box-shadow:0 0 0 1px var(--line);vertical-align:-1px;margin-right:6px}
+.empty{color:var(--mute);padding:36px 0;text-align:center;grid-column:1/-1;animation:fadeUp .5s both}
+.form{display:grid;gap:14px;max-width:440px;background:var(--card);padding:22px;border-radius:18px;box-shadow:var(--shadow);border:1px solid var(--line)}
+.form label{display:grid;gap:5px;font-weight:500;font-size:.88rem;color:var(--mute)}
+.chk{display:flex;gap:12px;flex-wrap:wrap;font-weight:400;color:var(--ink)}
+input[type=checkbox],input[type=range]{accent-color:#9C2C5E}
+input[type=file]{font-size:.85rem;color:var(--ink)}
+#prev{max-width:100%;max-height:300px;background:linear-gradient(160deg,var(--soft),var(--card));border-radius:14px;animation:rise .5s both}
+.stage{position:relative;width:300px;height:420px;border:1px solid var(--line);border-radius:18px;background:var(--card) radial-gradient(var(--line) 1px,transparent 1px) 0 0/20px 20px;touch-action:none;overflow:hidden;margin:auto;box-shadow:var(--shadow)}
+.stage img{position:absolute;width:130px;cursor:grab;user-select:none;-webkit-user-drag:none;animation:rise .4s both;filter:drop-shadow(0 6px 8px #2b1f2a33);transition:filter .2s}
+.stage img:active{filter:drop-shadow(0 14px 12px #2b1f2a44)}
+.tray{display:flex;gap:10px;overflow-x:auto;padding:14px 4px}
+.tray img{height:72px;width:72px;flex:none;object-fit:contain;border:1px solid var(--line);border-radius:12px;background:var(--card);cursor:pointer;transition:transform .2s,border-color .2s}
+.tray img:hover{transform:translateY(-4px);border-color:var(--plum)}.tray img:active{transform:scale(.9)}
+.mini{width:135px;height:189px;overflow:hidden;position:relative;border:1px solid var(--line);border-radius:12px;background:var(--card);margin:auto}
+.mini .in{width:300px;height:420px;transform:scale(.45);transform-origin:0 0;position:relative}
+.mini img{position:absolute;width:130px}
+.wx{background:linear-gradient(135deg,#9C2C5E,#6E3FA0);color:#fff;border-radius:16px;padding:18px 20px;margin-bottom:14px;font-size:1.05rem;box-shadow:var(--shadow)}
+.note{font-size:.85rem;color:var(--mute);margin:0 0 12px}
+.dot{position:fixed;z-index:20;width:8px;height:8px;border-radius:50%;pointer-events:none;animation:burst .8s ease-out forwards}
+@keyframes burst{to{transform:translate(var(--dx),var(--dy)) scale(.3);opacity:0}}
+.toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 20px;border-radius:999px;font-size:.9rem;z-index:30;animation:toast 2s ease forwards}
+@keyframes toast{0%{opacity:0;transform:translate(-50%,12px)}12%,80%{opacity:1;transform:translate(-50%,0)}100%{opacity:0;transform:translate(-50%,-6px)}}
+
+.hero{position:relative;text-align:center;padding:48px 8px 36px;overflow:hidden;border-radius:28px;margin-bottom:18px}
+.blob{position:absolute;border-radius:50%;filter:blur(40px);opacity:.55;z-index:-1;animation:drift 12s ease-in-out infinite alternate}
+.b1{width:240px;height:240px;background:#F3B5D0;left:-60px;top:-40px}
+.b2{width:220px;height:220px;background:#CDB8F2;right:-50px;top:30px;animation-delay:-4s}
+.b3{width:180px;height:180px;background:#F6D3B8;left:40%;bottom:-70px;animation-delay:-8s}
+@keyframes drift{to{transform:translate(30px,26px) scale(1.15)}}
+.sp{position:absolute;color:var(--gold);font-size:1.6rem;animation:twinkle 2.8s ease-in-out infinite}
+.s1{left:12%;top:26%}.s2{right:14%;top:18%;animation-delay:-1s;font-size:1.2rem}.s3{left:20%;bottom:20%;animation-delay:-1.8s;font-size:1rem}.s4{right:18%;bottom:24%;animation-delay:-.6s;color:var(--plum)}
+@keyframes twinkle{0%,100%{opacity:.25;transform:scale(.7) rotate(0)}50%{opacity:1;transform:scale(1.2) rotate(30deg)}}
+.hello{margin:0;color:var(--mute);letter-spacing:.14em;font-size:.9rem;animation:fadeUp .7s both}
+h1.mega{font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-weight:600;font-size:clamp(4rem,19vw,7.5rem);line-height:1;margin:4px 0;padding:0 8px 10px;
+  background:linear-gradient(100deg,#9C2C5E 0%,#E26FA2 30%,#8E5BD0 55%,#E26FA2 75%,#9C2C5E 100%);background-size:250% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  animation:reveal 1.2s cubic-bezier(.2,.8,.2,1) both,shine 6s linear 1.2s infinite,floatY 5s ease-in-out 1.2s infinite}
+@keyframes reveal{from{opacity:0;transform:scale(.8) translateY(30px);filter:blur(12px)}to{opacity:1;transform:none;filter:none}}
+@keyframes shine{to{background-position:250% center}}
+@keyframes floatY{50%{transform:translateY(-8px)}}
+.sub{font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:1.6rem;margin:0 0 10px;animation:fadeUp .8s .35s both}
+.lead{max-width:520px;margin:0 auto 20px;color:var(--mute);line-height:1.6;animation:fadeUp .8s .5s both}
+.cta{justify-content:center;animation:fadeUp .8s .65s both}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:26px}
+.stats div{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 8px;text-align:center;box-shadow:var(--shadow)}
+.stats b{display:block;font-family:'Cormorant Garamond',serif;font-size:2.4rem;color:var(--plum);line-height:1}
+.stats span{font-size:.8rem;color:var(--mute)}
+.feat{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:28px}
+.feat button{text-align:left;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;cursor:pointer;color:var(--ink);box-shadow:var(--shadow);display:grid;gap:6px;transition:transform .3s,box-shadow .3s,border-color .3s;animation:rise .6s both}
+.feat button:nth-child(2){animation-delay:.08s}.feat button:nth-child(3){animation-delay:.16s}.feat button:nth-child(4){animation-delay:.24s}.feat button:nth-child(5){animation-delay:.32s}
+.feat button:hover{transform:translateY(-6px);border-color:var(--plum);box-shadow:0 16px 34px #9c2c5e22}
+.feat b{font-family:'Cormorant Garamond',serif;font-size:1.3rem}
+.feat small{color:var(--mute);font-size:.88rem;line-height:1.5;font-family:inherit}
+.fi{width:44px;height:44px;border-radius:14px;background:var(--soft);display:grid;place-items:center;transition:transform .4s}
+.feat button:hover .fi{transform:rotate(-8deg) scale(1.1)}
+.fi svg{width:22px;height:22px;fill:none;stroke:var(--plum);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.steps{counter-reset:s;list-style:none;padding:0;margin:0 0 24px;display:grid;gap:12px}
+.steps li{counter-increment:s;position:relative;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 16px 16px 62px;line-height:1.5;color:var(--mute)}
+.steps li b{color:var(--ink)}
+.steps li::before{content:counter(s);position:absolute;left:16px;top:50%;transform:translateY(-50%);width:34px;height:34px;border-radius:50%;background:var(--plum);color:#fff;display:grid;place-items:center;font-family:'Cormorant Garamond',serif;font-size:1.2rem}
+.tipbox{background:linear-gradient(135deg,var(--soft),var(--card));border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:14px;padding:14px 18px;margin-bottom:20px}
+.tipbox p{margin:4px 0 0;color:var(--mute);line-height:1.55;font-size:.92rem}
+@media(max-width:380px){nav button{font-size:.7rem}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header style="display:none"><h1>Wardrobe</h1><p class="tag">Your closet, curated.</p></header>
+<main>
+
+<section id="home" class="on">
+  <div class="hero">
+    <i class="blob b1"></i><i class="blob b2"></i><i class="blob b3"></i>
+    <span class="sp s1">✦</span><span class="sp s2">✦</span><span class="sp s3">✦</span><span class="sp s4">✧</span>
+    <p class="hello">Welcome to your</p>
+    <h1 class="mega">Wardrobe</h1>
+    <p class="sub">Your closet, but make it chic.</p>
+    <p class="lead">Snap your clothes, let the app clean up the photos and tag them, then mix outfits and get a fresh look every morning that fits the weather.</p>
+    <div class="row cta"><button class="btn" onclick="show('add')">Add your first piece</button><button class="btn alt" onclick="show('today')">Get today's look</button></div>
+  </div>
+  <div class="stats">
+    <div><b id="stItems">0</b><span>pieces in closet</span></div>
+    <div><b id="stOut">0</b><span>saved outfits</span></div>
+    <div><b id="stCols">0</b><span>colors owned</span></div>
+  </div>
+  <div id="latest" hidden><h2>Latest additions</h2><div class="tray" id="latestTray"></div></div>
+  <h2>Everything you need</h2>
+  <div class="feat">
+    <button onclick="show('add')"><span class="fi"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></span><b>Snap and clean</b><small>Take a photo or upload one. The background disappears automatically.</small></button>
+    <button onclick="show('add')"><span class="fi"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8.5" r="1.3"/></svg></span><b>Smart tags</b><small>Color, pattern and category are detected for you. Edit anything you like.</small></button>
+    <button onclick="show('closet')"><span class="fi"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 3l5 4-3 3-2-1v12H8V9l-2 1-3-3 5-4a4 4 0 008 0z"/></svg></span><b>Digital closet</b><small>Browse and filter by category, color, season or occasion.</small></button>
+    <button onclick="show('build')"><span class="fi"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg></span><b>Outfit builder</b><small>Drag pieces together on a board and save your favourite combinations.</small></button>
+    <button onclick="show('today')"><span class="fi"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg></span><b>Daily look</b><small>Outfit ideas for college, office, parties and weddings, based on today's weather.</small></button>
+  </div>
+  <h2>How it works</h2>
+  <ol class="steps">
+    <li><b>Add your clothes.</b> Photograph each piece on a plain background, like a bed sheet or wall.</li>
+    <li><b>Check the tags.</b> Fix the category, season and occasion so suggestions stay accurate.</li>
+    <li><b>Style and save.</b> Build outfits or ask for today's look and save the ones you love.</li>
+  </ol>
+  <div class="tipbox"><b>Photo tips</b><p>Lay the clothing flat in good light, with a plain background that contrasts with the colour. If some background is left behind, raise the removal strength slider while adding.</p></div>
+  <p class="note" style="text-align:center">Your wardrobe is saved privately on this device only.</p>
+</section>
+
+<section id="closet">
+  <div class="row">
+    <select id="fCat"></select><select id="fColor"></select><select id="fSeason"></select><select id="fOcc"></select>
+  </div>
+  <div id="grid" class="grid"></div>
+</section>
+
+<section id="add">
+  <h2 id="addTitle">Add a piece</h2>
+  <div class="form">
+    <label>Take a photo or choose from gallery
+      <input type="file" id="file" accept="image/*">
+    </label>
+    <canvas id="prev" hidden></canvas>
+    <label id="tolWrap" hidden>Background removal strength
+      <input type="range" id="tol" min="10" max="90" value="40">
+    </label>
+    <p class="note" id="aiNote" hidden></p>
+    <label>Category <select id="cat"></select></label>
+    <label>Color <select id="color"></select></label>
+    <label>Pattern <select id="pattern"><option>Solid</option><option>Striped</option><option>Printed</option></select></label>
+    <label>Season <select id="season"><option>All</option><option>Summer</option><option>Winter</option></select></label>
+    <div><b style="font-size:.9rem">Occasion</b><div class="chk" id="occ"></div></div>
+    <div class="row"><button class="btn" id="saveItem">Save to closet</button><button class="btn alt" id="cancelEdit" hidden>Cancel</button></div>
+  </div>
+</section>
+
+<section id="build">
+  <h2>Outfit builder</h2>
+  <p class="note">Tap an item below to add it, then drag it into place. Double-tap an item on the board to remove it.</p>
+  <div class="stage" id="stage"></div>
+  <div class="tray" id="tray"></div>
+  <div class="row"><input id="oName" placeholder="Outfit name" style="padding:9px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink)"><button class="btn" id="saveOutfit">Save outfit</button><button class="btn alt" id="clearStage">Clear</button></div>
+  <h2>Saved outfits</h2>
+  <div id="outfits" class="grid"></div>
+</section>
+
+<section id="today">
+  <h2>Today's suggestion</h2>
+  <div class="wx" id="wx">Weather not loaded yet.</div>
+  <div class="row">
+    <button class="btn alt" id="getWx">Use my location's weather</button>
+    <label>or temp °C <input type="number" id="tempIn" style="width:80px"></label>
+  </div>
+  <div class="row">
+    <select id="tOcc"></select>
+    <button class="btn" id="suggest">Suggest an outfit</button>
+  </div>
+  <div id="sug"></div>
+</section>
+</main>
+
+<nav>
+  <button data-t="home" class="on"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg><span>Home</span></button>
+  <button data-t="closet"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 3l5 4-3 3-2-1v12H8V9l-2 1-3-3 5-4a4 4 0 008 0z"/></svg><span>Closet</span></button>
+  <button data-t="add"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg><span>Add</span></button>
+  <button data-t="build"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg><span>Outfits</span></button>
+  <button data-t="today"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg><span>Today</span></button>
+</nav>
+
+<script>
+const CATS=['Top','Kurti','Jeans','Trousers','Skirt','Leggings','Saree','Dress','Lehenga','Jacket','Shoes','Dupatta'];
+const ROLE={Top:'up',Kurti:'up',Jeans:'low',Trousers:'low',Skirt:'low',Leggings:'low',Saree:'full',Dress:'full',Lehenga:'full',Jacket:'out',Shoes:'shoe',Dupatta:'acc'};
+const OCCS=['College','Party','Office','Wedding'];
+const COLORS={Black:[20,20,20],White:[240,240,240],Grey:[128,128,128],Red:[200,30,40],Maroon:[110,20,40],Pink:[240,130,170],Orange:[240,130,30],Yellow:[240,205,50],Green:[50,150,70],Olive:[110,115,50],Teal:[30,130,130],Blue:[40,90,200],Navy:[25,35,100],Purple:[120,60,160],Brown:[110,70,40],Beige:[220,200,165],Cream:[245,235,210]};
+const $=s=>document.querySelector(s);
+const load=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}};
+const save=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){alert('Storage is full. Delete some items and try again.')}};
+let items=load('wd_items',[]),outfits=load('wd_outfits',[]),editId=null,orig=null,temp=null,rain=false;
+
+const fill=(sel,arr,first)=>{sel.innerHTML=(first?`<option value="">${first}</option>`:'')+arr.map(a=>`<option>${a}</option>`).join('')};
+fill($('#cat'),CATS);fill($('#color'),Object.keys(COLORS));fill($('#fCat'),CATS,'All categories');fill($('#fColor'),Object.keys(COLORS),'All colors');
+fill($('#fSeason'),['Summer','Winter','All'],'All seasons');fill($('#fOcc'),OCCS,'All occasions');fill($('#tOcc'),OCCS);
+$('#occ').innerHTML=OCCS.map(o=>`<label class="chk"><input type="checkbox" value="${o}"> ${o}</label>`).join('');
+
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>show(b.dataset.t));
+function show(t){document.querySelector('header').style.display=t==='home'?'none':'';if(t==='home')renderHome();document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));
+  document.querySelectorAll('section').forEach(s=>s.classList.toggle('on',s.id===t));
+  if(t==='closet')renderCloset();if(t==='build')renderBuild();if(t==='add'&&!editId)resetForm();window.scrollTo(0,0)}
+
+/* ---------- Closet ---------- */
+['#fCat','#fColor','#fSeason','#fOcc'].forEach(s=>$(s).onchange=renderCloset);
+function renderCloset(){
+  const c=$('#fCat').value,co=$('#fColor').value,se=$('#fSeason').value,oc=$('#fOcc').value;
+  const list=items.filter(i=>(!c||i.cat===c)&&(!co||i.color===co)&&(!se||i.season===se)&&(!oc||i.occ.includes(oc)));
+  $('#grid').innerHTML=list.length?list.map(i=>`<div class="item"><img src="${i.img}" alt="${i.cat}">
+    <div class="tags"><span class="sw" style="background:rgb(${COLORS[i.color]})"></span>${i.color} ${i.cat}<br>${i.pattern}, ${i.season}${i.occ.length?'<br>'+i.occ.join(', '):''}</div>
+    <div class="row" style="margin:0"><button class="btn alt" onclick="editItem('${i.id}')">Edit</button><button class="btn alt" onclick="delItem('${i.id}')">Delete</button></div></div>`).join('')
+    :`<div class="empty">${items.length?'No items match these filters.':'Your closet is empty. Open Add and upload your first piece.'}</div>`;
+}
+function renderHome(){$('#stItems').textContent=items.length;$('#stOut').textContent=outfits.length;$('#stCols').textContent=new Set(items.map(i=>i.color)).size;
+  const l=items.slice(-8).reverse();$('#latest').hidden=!l.length;$('#latestTray').innerHTML=l.map(i=>`<img src="${i.img}" alt="${i.cat}" onclick="show('closet')">`).join('')}
+function delItem(id){if(confirm('Delete this item?')){items=items.filter(i=>i.id!==id);save('wd_items',items);renderCloset()}}
+function editItem(id){const i=items.find(x=>x.id===id);editId=id;show('add');
+  $('#addTitle').textContent='Edit item';$('#cancelEdit').hidden=false;
+  const p=$('#prev'),im=new Image();im.onload=()=>{p.width=im.width;p.height=im.height;p.getContext('2d').drawImage(im,0,0);p.hidden=false};im.src=i.img;
+  $('#cat').value=i.cat;$('#color').value=i.color;$('#pattern').value=i.pattern;$('#season').value=i.season;
+  document.querySelectorAll('#occ input').forEach(c=>c.checked=i.occ.includes(c.value));orig=null;$('#tolWrap').hidden=true;$('#aiNote').hidden=true}
+function resetForm(){editId=null;orig=null;$('#addTitle').textContent='Add clothes';$('#cancelEdit').hidden=true;$('#prev').hidden=true;$('#tolWrap').hidden=true;$('#aiNote').hidden=true;$('#file').value='';
+  document.querySelectorAll('#occ input').forEach(c=>c.checked=false)}
+$('#cancelEdit').onclick=()=>{resetForm();show('closet')};
+
+/* ---------- Photo: background removal + auto tags ---------- */
+$('#file').onchange=e=>{const f=e.target.files[0];if(!f)return;const im=new Image();
+  im.onload=()=>{const s=Math.min(1,400/Math.max(im.width,im.height));const c=document.createElement('canvas');
+    c.width=Math.round(im.width*s);c.height=Math.round(im.height*s);c.getContext('2d').drawImage(im,0,0,c.width,c.height);
+    orig=c;$('#tolWrap').hidden=false;process()};im.src=URL.createObjectURL(f)};
+$('#tol').oninput=()=>orig&&process();
+
+function process(){
+  const w=orig.width,h=orig.height,ctx=orig.getContext('2d'),d=ctx.getImageData(0,0,w,h),px=d.data,tol=+$('#tol').value;
+  // background color = average of the border pixels
+  let r=0,g=0,b=0,n=0;const edge=(x,y)=>{const k=(y*w+x)*4;r+=px[k];g+=px[k+1];b+=px[k+2];n++};
+  for(let x=0;x<w;x++){edge(x,0);edge(x,h-1)}for(let y=0;y<h;y++){edge(0,y);edge(w-1,y)}
+  r/=n;g/=n;b/=n;
+  const near=k=>Math.hypot(px[k]-r,px[k+1]-g,px[k+2]-b)<tol*1.8;
+  const seen=new Uint8Array(w*h),st=[];
+  const push=(x,y)=>{const i=y*w+x;if(!seen[i]&&near(i*4)){seen[i]=1;st.push(i)}};
+  for(let x=0;x<w;x++){push(x,0);push(x,h-1)}for(let y=0;y<h;y++){push(0,y);push(w-1,y)}
+  while(st.length){const i=st.pop(),x=i%w,y=(i-x)/w;px[i*4+3]=0;
+    if(x>0)push(x-1,y);if(x<w-1)push(x+1,y);if(y>0)push(x,y-1);if(y<h-1)push(x,y+1)}
+  // crop to the clothing
+  let x0=w,y0=h,x1=0,y1=0;
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++)if(px[(y*w+x)*4+3]){if(x<x0)x0=x;if(x>x1)x1=x;if(y<y0)y0=y;if(y>y1)y1=y}
+  if(x1<=x0||y1<=y0){alert('The whole photo was removed. Lower the removal strength.');return}
+  const t=document.createElement('canvas');t.width=w;t.height=h;t.getContext('2d').putImageData(d,0,0);
+  const p=$('#prev');p.width=x1-x0+1;p.height=y1-y0+1;const pc=p.getContext('2d');pc.clearRect(0,0,p.width,p.height);
+  pc.drawImage(t,x0,y0,p.width,p.height,0,0,p.width,p.height);p.hidden=false;autoTag(p)}
+
+function autoTag(c){
+  const w=c.width,h=c.height,px=c.getContext('2d').getImageData(0,0,w,h).data,bk={};let hx=0,vy=0,cnt=0;
+  for(let y=0;y<h-1;y++)for(let x=0;x<w-1;x++){const k=(y*w+x)*4;if(px[k+3]<200)continue;
+    const key=(px[k]>>5)+','+(px[k+1]>>5)+','+(px[k+2]>>5);bk[key]=(bk[key]||0)+1;
+    const kx=k+4,ky=k+w*4;if(px[kx+3]>200&&px[ky+3]>200){hx+=Math.abs(px[k]-px[kx])+Math.abs(px[k+1]-px[kx+1])+Math.abs(px[k+2]-px[kx+2]);
+      vy+=Math.abs(px[k]-px[ky])+Math.abs(px[k+1]-px[ky+1])+Math.abs(px[k+2]-px[ky+2]);cnt++}}
+  const top=Object.entries(bk).sort((a,b)=>b[1]-a[1])[0];if(!top)return;
+  const rgb=top[0].split(',').map(v=>v*32+16);let best='Black',bd=1e9;
+  for(const[nm,c2]of Object.entries(COLORS)){const dd=Math.hypot(rgb[0]-c2[0],rgb[1]-c2[1],rgb[2]-c2[2]);if(dd<bd){bd=dd;best=nm}}
+  hx/=cnt||1;vy/=cnt||1;const m=(hx+vy)/2;
+  const pat=m<9?'Solid':(Math.max(hx,vy)>1.8*Math.min(hx,vy)&&m<30?'Striped':'Printed');
+  const ar=h/w,cat=ar<.75?'Shoes':ar<1.15?'Top':ar<1.6?'Kurti':ar<2.3?'Jeans':'Saree';
+  $('#color').value=best;$('#pattern').value=pat;$('#cat').value=cat;
+  $('#aiNote').hidden=false;$('#aiNote').textContent=`Guessed: ${best}, ${pat.toLowerCase()}, ${cat.toLowerCase()}. The category is a rough guess from the shape, so please check the tags.`}
+
+$('#saveItem').onclick=e=>{
+  const p=$('#prev');if(p.hidden){alert('Choose a photo first.');return}
+  const o=[...document.querySelectorAll('#occ input:checked')].map(c=>c.value);
+  const rec={id:editId||Date.now()+'',img:p.toDataURL('image/webp',.85),cat:$('#cat').value,color:$('#color').value,pattern:$('#pattern').value,season:$('#season').value,occ:o};
+  if(editId){const i=items.findIndex(x=>x.id===editId);items[i]=rec}else items.push(rec);
+  save('wd_items',items);burst(e,editId?'Changes saved':'Added to your closet');resetForm();show('closet')};
+
+/* ---------- Outfit builder ---------- */
+let board=[];
+function renderBuild(){
+  $('#tray').innerHTML=items.length?items.map(i=>`<img src="${i.img}" alt="${i.cat}" onclick="addToBoard('${i.id}')">`).join(''):'<span class="empty">Add clothes to your closet first.</span>';
+  drawBoard();renderOutfits()}
+function addToBoard(id,x,y){board.push({id,x:x??80+Math.random()*40,y:y??20+board.length*50});drawBoard()}
+function drawBoard(){const st=$('#stage');st.innerHTML='';
+  board.forEach((b,idx)=>{const it=items.find(i=>i.id===b.id);if(!it)return;const im=document.createElement('img');
+    im.src=it.img;im.style.left=b.x+'px';im.style.top=b.y+'px';im.alt=it.cat;
+    let sx,sy,ox,oy,drag=false;
+    im.onpointerdown=e=>{drag=true;sx=e.clientX;sy=e.clientY;ox=b.x;oy=b.y;im.setPointerCapture(e.pointerId);im.style.cursor='grabbing'};
+    im.onpointermove=e=>{if(!drag)return;b.x=ox+e.clientX-sx;b.y=oy+e.clientY-sy;im.style.left=b.x+'px';im.style.top=b.y+'px'};
+    im.onpointerup=()=>{drag=false;im.style.cursor='grab'};
+    im.ondblclick=()=>{board.splice(idx,1);drawBoard()};st.appendChild(im)})}
+$('#clearStage').onclick=()=>{board=[];drawBoard()};
+$('#saveOutfit').onclick=e=>{if(!board.length){alert('Add at least one item to the board.');return}
+  outfits.push({id:Date.now()+'',name:$('#oName').value||'Outfit '+(outfits.length+1),pieces:board.map(b=>({...b}))});
+  save('wd_outfits',outfits);burst(e,'Outfit saved');$('#oName').value='';board=[];renderBuild()};
+function miniHTML(pieces){return `<div class="mini"><div class="in">${pieces.map(p=>{const it=items.find(i=>i.id===p.id);return it?`<img src="${it.img}" style="left:${p.x}px;top:${p.y}px" alt="">`:''}).join('')}</div></div>`}
+function renderOutfits(){$('#outfits').innerHTML=outfits.length?outfits.map(o=>`<div class="item">${miniHTML(o.pieces)}<div class="tags">${o.name}</div>
+  <div class="row" style="margin:0"><button class="btn alt" onclick="loadOutfit('${o.id}')">Edit</button><button class="btn alt" onclick="delOutfit('${o.id}')">Delete</button></div></div>`).join(''):'<div class="empty">No saved outfits yet.</div>'}
+function loadOutfit(id){board=outfits.find(o=>o.id===id).pieces.map(p=>({...p}));outfits=outfits.filter(o=>o.id!==id);save('wd_outfits',outfits);renderBuild();window.scrollTo(0,0)}
+function delOutfit(id){if(confirm('Delete this outfit?')){outfits=outfits.filter(o=>o.id!==id);save('wd_outfits',outfits);renderOutfits()}}
+
+/* ---------- Daily suggestion ---------- */
+$('#getWx').onclick=()=>{if(!navigator.geolocation){alert('Location is not available. Type the temperature instead.');return}
+  $('#wx').textContent='Getting weather...';
+  navigator.geolocation.getCurrentPosition(async pos=>{try{
+    const r=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${pos.coords.latitude}&longitude=${pos.coords.longitude}&current=temperature_2m,precipitation`);
+    const j=await r.json();temp=Math.round(j.current.temperature_2m);rain=j.current.precipitation>0;showWx()}
+    catch(e){$('#wx').textContent='Could not load weather. Type the temperature below.'}},
+    ()=>{$('#wx').textContent='Location was blocked. Type the temperature below.'})};
+$('#tempIn').oninput=e=>{temp=e.target.value===''?null:+e.target.value;showWx()};
+function showWx(){$('#wx').textContent=temp==null?'Weather not loaded yet.':`${temp}°C${rain?', raining':''}: ${seasonFor(temp)==='Summer'?'warm, wear light fabrics':seasonFor(temp)==='Winter'?'cold, layer up':'mild day'}`}
+const seasonFor=t=>t>=27?'Summer':t<=17?'Winter':'Mild';
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+$('#suggest').onclick=e=>{
+  if(temp==null){alert('Load the weather or type a temperature first.');return}
+  const occ=$('#tOcc').value,sn=seasonFor(temp);
+  const ok=i=>sn==='Mild'||i.season==='All'||i.season===sn;
+  const pool=role=>{const all=items.filter(i=>ROLE[i.cat]===role&&ok(i));const m=all.filter(i=>i.occ.includes(occ));return m.length?m:all};
+  const dressy=occ==='Wedding'||occ==='Party';
+  const full=pool('full'),up=pool('up'),low=pool('low');
+  let set=[];
+  if(full.length&&(dressy||!up.length||!low.length)&&(dressy||Math.random()<.3||!up.length||!low.length))set.push(pick(full));
+  else if(up.length&&low.length)set.push(pick(up),pick(low));
+  else if(full.length)set.push(pick(full));
+  if(!set.length){$('#sug').innerHTML='<p class="empty">Not enough matching clothes. Add a top and bottom (or a dress or saree) for this weather and occasion.</p>';return}
+  if(temp<18||rain&&temp<24){const j=pool('out');if(j.length)set.push(pick(j))}
+  const sh=pool('shoe');if(sh.length)set.push(pick(sh));
+  const place={out:20,up:20,full:20,low:170,shoe:320,acc:20};let u=0;
+  const pieces=set.map(it=>{const r=ROLE[it.cat];let y=place[r];if(r==='out')return{id:it.id,x:150,y:30};return{id:it.id,x:85,y:y}});
+  window._sug=pieces;
+  $('#sug').innerHTML=`<div class="row">${set.map(i=>`<div class="item" style="width:130px"><img src="${i.img}" alt="${i.cat}"><div class="tags">${i.color} ${i.cat}</div></div>`).join('')}</div>
+   <div class="row"><button class="btn" id="again">Try another</button><button class="btn alt" id="saveSug">Save as outfit</button></div>`;
+  $('#again').onclick=()=>$('#suggest').click();
+  $('#saveSug').onclick=e=>{outfits.push({id:Date.now()+'',name:`${occ} look`,pieces:window._sug});save('wd_outfits',outfits);burst(e,'Saved to Outfits')}};
+
+function burst(e,msg){const c=['#9C2C5E','#C9956B','#B79AE0','#E9A3C0'];const x=e&&e.clientX||innerWidth/2,y=e&&e.clientY||innerHeight/2;
+  for(let i=0;i<16;i++){const d=document.createElement('span');d.className='dot';d.style.background=c[i%4];d.style.left=x+'px';d.style.top=y+'px';
+    d.style.setProperty('--dx',(Math.random()-.5)*200+'px');d.style.setProperty('--dy',(Math.random()-.9)*180+'px');document.body.appendChild(d);setTimeout(()=>d.remove(),800)}
+  const t=document.createElement('div');t.className='toast';t.textContent=msg||'Saved';document.body.appendChild(t);setTimeout(()=>t.remove(),2000)}
+renderHome();
+</script>
+</body>
+</html>#F1EEF7;--mute:#A29DB5;--plum:#C79BE0;--gold:#F2A900;--card:#221E2D;--line:#352F44}}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:'Bricolage Grotesque',system-ui,sans-serif;padding-bottom:84px}
 header{padding:20px 16px 4px;max-width:900px;margin:auto}
